@@ -19,9 +19,6 @@ The **Game Store** is a database-driven e-commerce simulation built using **Flas
 - 💳 Payment simulation  
 - 🧑‍💼 Admin panel for inventory control  
 
-> 📆 **Final Submission Date:** 9th May 2025  
-> 👨‍🏫 **Course:** Database Systems Lab (Spring 2025)
-
 ---
 
 ## 🎯 Project Objectives
@@ -43,7 +40,7 @@ The **Game Store** is a database-driven e-commerce simulation built using **Flas
 - 📦 **Order Summary:** Final order view before placing  
 - 🔐 **Login/Register Forms:** Validations, clean design  
 
-📁 Submitted: `.html`, `.css`, screenshots, and explanation doc
+
 
 ---
 
