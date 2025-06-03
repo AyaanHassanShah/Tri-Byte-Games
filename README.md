@@ -14,7 +14,7 @@
 The **Game Store** is a database-driven e-commerce simulation built using **Flask (Python)** for backend logic and **HTML/CSS** for the front end. It models a full online store with:
 
 - 🔐 User authentication & role-based access  
-- 🎮 Game browsing & filtering  
+- 🎮 Game browsing  
 - 🛒 Shopping cart & order processing  
 - 💳 Payment simulation  
 - 🧑‍💼 Admin panel for inventory control  
@@ -30,48 +30,32 @@ The **Game Store** is a database-driven e-commerce simulation built using **Flas
 
 ---
 
-
-
-
-
-- 🏠 **Home Page:** Featured games, filters by genre/platform  
+- 🏠 **Home Page:** Games and Login/Register
 - 🎮 **Product Page:** Game details + Add to Cart  
 - 🛒 **Cart Page:** Game list, quantity update, remove options  
 - 📦 **Order Summary:** Final order view before placing  
 - 🔐 **Login/Register Forms:** Validations, clean design  
 
-
-
 ---
-
 
 - 🔐 **Sign Up / Login with hashed passwords**  
 - 👥 **Role-Based Access:**  
   - Admin → Manage games & orders  
-  - Customer → Shop, pay, track orders  
+  - Customer → Shop, pay
 - ✅ **Session Handling:** Using Flask `session` & `login_required`  
 
-
-
-
+---
 
 - 🛒 Add/remove games from cart, live total  
 - 📤 On checkout → create order in DB, trigger inventory update  
 - 💳 Simulated payment gateway with confirmation  
 - 🔄 Inventory auto-update using DB trigger logic  
 
-
-
 ---
 
-
-
 - 🧰 All modules merged into one seamless Flask app  
-- 🧑‍💼 Admin Panel → Add/edit/delete games  
-- 🚚 Order Tracking: "Processing", "Shipped", "Delivered"  
+- 🧑‍💼 Admin Panel → Add/edit/delete games    
 - 🧪 Testing: full test suite run, performance load testing  
-
-
 
 ---
 
@@ -97,22 +81,32 @@ The **Game Store** is a database-driven e-commerce simulation built using **Flas
 | Backend     | Python (Flask)      |
 | Database    | Microsoft SQL Server|
 | Tools       | VS Code, Postman    |
-| Auth        | Flask Sessions |
+| Auth        | Flask Sessions      |
 
 ---
 
+## 🚀 How to Run
 
-## 📊 Languages Used
-<hr>
-<p align="center">
-  ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=AyaanHassanShah&repo=Tri-Byte-Games&layout=compact)
-</p>
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/AyaanHassanShah/Tri-Byte-Games.git
+    cd Tri-Byte-Games
+    ```
+2. **Create and activate a virtual environment:**
+    ```bash
+    python -m venv venv
+    venv\Scripts\activate
+    ```
+3. **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+4. **Start the Flask application:**
+    ```bash
+    python app.py
+    ```
 
-<p align="center">
-  🔸 This project primarily uses <strong>Flask (Python)</strong> for backend development and application logic, and <strong>HTML</strong> and <strong>CSS</strong> for frontend design and styling.
-</p>
-
-
+---
 
 ## ✅ Project Status
 
