@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Tri Byte Games{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --card-bg: #0f172a; /* Dark background for cards and sections */
+        --card-border: #334155; /* Border color for elements */
+        --text-primary: #f8fafc; /* Light text color for readability */
+        --text-secondary: #94a3b8; /* Secondary text color */
+        --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Card shadow */
+        --hover-shadow: 0 20px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(59, 130, 246, 0.1); /* Hover shadow */
+        --accent-glow: rgba(59, 130, 246, 0.1);
+    }
+
+    .auth-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .auth-form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 40px;
+        background: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--card-border);
+        color: var(--text-primary);
+    }
+
+    .auth-form:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .auth-form h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white; /* Title color on dark background */
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        opacity: 0; /* Initial state for animation */
+        transform: translateY(20px); /* Initial state for animation */
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Animation transition */
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-primary); /* Label color - changed to white */
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--card-border);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background-color: #1e293b; /* Darker input background */
+        color: var(--text-primary) !important; /* Input text color - changed to white */
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        background-color: #2d3748; /* Slightly lighter on focus */
+    }
+
+    .form-control::placeholder {
+        color: var(--text-primary); /* Placeholder color - changed to white */
+        opacity: 0.7; /* Make placeholder slightly transparent */
+    }
+
+    /* Fix for auto-filled input fields */
+    .form-control:-webkit-autofill,
+    .form-control:-webkit-autofill:hover,
+    .form-control:-webkit-autofill:focus,
+    .form-control:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 20px; /* Increased top margin */
+        border-radius: 8px; /* Rounded corners for button */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Button animation */
+        background: var(--gradient-primary);
+        border: none;
+        color: white;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px); /* Lift button on hover */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
+        background: var(--gradient-secondary);
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 30px; /* Increased top margin */
+        padding-top: 20px;
+        border-top: 1px solid var(--card-border); /* Darker border */
+        color: var(--text-secondary); /* Link text color */
+    }
+
+    .auth-links a {
+        color: var(--secondary-color); /* Link color */
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .auth-links a:hover {
+        color: var(--primary-color); /* Link hover color */
+        text-decoration: underline;
+    }
+
+    .form-icon {
+        position: relative;
+    }
+
+    .form-icon i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-primary); /* Icon color - changed to white */
+    }
+
+    .form-icon input {
+        padding-left: 40px;
+    }
+
+    /* Animation for form elements */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-header">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome Back</h1>
+        <p class="lead">Sign in to access your account</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="auth-form">
+        <h2><i class="fas fa-sign-in-alt me-2"></i>Login</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="form-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" class="form-control" id="email" name="email" required 
+                           placeholder="Enter your email">
+                </div>
+            </div>
+            <div id="cooldown-message" class="alert alert-warning" role="alert" style="display: none;">
+                <!-- Message will be set by JavaScript -->
+            </div>
+
+            <div class="form-group" id="password-group">
+                <label for="password">Password</label>
+                <div class="form-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="form-control" id="password" name="password" required 
+                           placeholder="Enter your password">
+                </div>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="showPassword" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'">
+                    <label class="form-check-label" for="showPassword" style="color: var(--text-secondary);">
+                        Show Password
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-login" id="submit-button">
+                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>Don't have an account? 
+                <a href="{{ url_for('register') }}" style="color: #3498db; text-decoration: underline; font-weight: 700;">
+                    Register here
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add animation to form elements on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const formGroups = document.querySelectorAll('.auth-form .form-group');
+        formGroups.forEach((group, index) => {
+            setTimeout(() => {
+                group.style.opacity = 1;
+                group.style.transform = 'translateY(0)';
+            }, index * 100); // Stagger the animation
+        });
+
+        // Show/Hide Password functionality
+        const showPasswordCheckbox = document.getElementById('showPassword');
+        const passwordInput = document.getElementById('password');
+        
+        if (showPasswordCheckbox && passwordInput) {
+            showPasswordCheckbox.addEventListener('change', function() {
+                passwordInput.type = this.checked ? 'text' : 'password';
+            });
+        }
+    });
+
+    // Add hover effect to the login button (already has transition via CSS)
+    // No extra JS needed for the button hover effect due to CSS transitions
+</script>
+{% endblock %}
+ 

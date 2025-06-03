@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Tri Byte Games - Home{% endblock %}
+
+{% block extra_css %}
+    <style>
+    :root {
+        --card-bg: #0f172a;
+        --card-hover: #1e293b;
+        --card-border: #334155;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --feature-bg: #1e293b;
+        --feature-hover: #3b82f6;
+        --price-color: #3b82f6;
+        --price-hover: #10b981;
+        --accent-glow: rgba(59, 130, 246, 0.1);
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        margin-bottom: 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+        animation: gradientAnimation 8s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .hero-section .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section h1 {
+        animation: fadeInDown 1s ease-out;
+    }
+
+    .hero-section p {
+        animation: fadeInUp 1s ease-out 0.5s;
+        animation-fill-mode: both;
+    }
+
+    .hero-section .btn-primary {
+        background: var(--gradient-primary);
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .hero-section .btn-primary:hover {
+        background: var(--gradient-secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .games-scroll-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        overflow-x: auto;
+        gap: 24px;
+        padding: 24px 0 24px 0;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+    }
+    .games-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+    .game-card {
+        min-width: 320px;
+        max-width: 320px;
+        height: 480px;
+        display: flex;
+        flex-direction: column;
+        scroll-snap-align: start;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    .game-card.visible {
+        opacity: 1 !important;
+        transform: translateX(0) !important;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .game-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
+        background: var(--card-hover);
+    }
+
+    .game-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, var(--accent-glow) 0%, rgba(0,0,0,0) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .game-card:hover::before {
+        opacity: 1;
+    }
+
+    .game-card .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: linear-gradient(to bottom, var(--card-bg) 0%, var(--card-hover) 100%);
+    }
+
+    .game-card .card-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .game-card:hover .card-title {
+        color: var(--feature-hover);
+        text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .game-card .card-text {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .stock-badge {
+        padding: 8px 15px;
+        border-radius: 0;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        background: var(--feature-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
+    }
+
+    .stock-badge.bg-success {
+        background: #10b981 !important;
+        border-color: #059669;
+    }
+
+    .stock-badge.bg-danger {
+        background: #ef4444 !important;
+        border-color: #dc2626;
+    }
+
+    .stock-badge:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-features {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+    }
+
+    .feature-badge {
+        background: var(--feature-bg);
+        padding: 8px 15px;
+        border-radius: 0;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid var(--card-border);
+    }
+
+    .feature-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 0 10px var(--accent-glow);
+        background: var(--feature-hover);
+        color: var(--text-primary);
+        border-color: var(--feature-hover);
+    }
+
+    .price-tag {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--price-color);
+        margin-bottom: 1.2rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .price-and-stock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.2rem;
+    }
+
+    .game-card:hover .price-tag {
+        transform: scale(1.05);
+        color: var(--price-hover);
+        text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .btn-view-details {
+        width: 100%;
+        padding: 12px;
+        border-radius: 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        background: var(--gradient-primary);
+        border: none;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-view-details:hover {
+        background: var(--gradient-secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+    }
+
+    .btn-view-details::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn-view-details:hover::before {
+        left: 100%;
+    }
+
+    .btn-view-details:active {
+        transform: translateY(0);
+    }
+
+    /* Add a subtle pulse animation to the stock badge */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(72, 187, 120, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+        }
+    }
+
+    .stock-badge.bg-success {
+        animation: pulse 2s infinite;
+    }
+
+    .animated-heading {
+        animation: fadeInUp 1s ease-out forwards;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        {% if session.get('username') %}
+        <h1 class="display-4 mb-4 animated-heading">Welcome Mr. {{ session.get('username') }}</h1>
+        {% else %}
+        <h1 class="display-4 mb-4">WELCOME TO TRI BYTE GAMES</h1>
+        {% endif %}
+        <p class="lead mb-4">Discover the best games for your favorite platforms</p>
+        <a href="#games" class="btn btn-primary btn-lg">Browse Games</a>
+    </div>
+</div>
+
+<div class="container" id="games">
+    <h2 class="text-center mb-5">Available Games</h2>
+    <div class="games-scroll-container">
+        {% for game in games %}
+        <div>
+            <div class="card game-card">
+                {% if game.ImageURL %}
+                <img src="{{ game.ImageURL }}" class="card-img-top" alt="{{ game.GameTitle }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/default-game.jpg') }}" class="card-img-top" alt="{{ game.GameTitle }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ game.GameTitle }}</h5>
+                    <div class="game-features">
+                        <span class="feature-badge">
+                            <i class="fas fa-gamepad me-1"></i>{{ game.Genre }}
+                        </span>
+                        <span class="feature-badge">
+                            <i class="fas fa-desktop me-1"></i>{{ game.Platform }}
+                        </span>
+                    </div>
+                    <div class="price-and-stock">
+                        <div class="price-tag">
+                            ${{ "%.2f"|format(game.Price) }}
+                        </div>
+                        <span class="badge bg-{{ 'success' if game.StockQuantity > 0 else 'danger' }} stock-badge">
+                            <i class="fas fa-box me-1"></i>Stock: {{ game.StockQuantity }}
+                        </span>
+                    </div>
+                    {% if 'user_id' in session %}
+                    <a href="{{ url_for('game_details', game_id=game.GameId) }}" class="btn btn-primary btn-view-details">
+                        <i class="fas fa-info-circle me-1"></i>View Details
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-view-details">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login to View
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add horizontal animation to game cards on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.game-card').forEach((card) => {
+        observer.observe(card);
+    });
+</script>
+{% endblock %} 

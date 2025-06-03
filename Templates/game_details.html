@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.GameTitle }} - Tri Byte Games{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+
+    .game-info {
+        padding: 30px;
+        border-radius: 15px;
+        background: rgba(33, 37, 41, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .game-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .game-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #e0e0e0;
+        margin-bottom: 2rem;
+    }
+
+    .game-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 2rem;
+    }
+
+    .detail-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-item i {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 10px;
+    }
+
+    .detail-item h5 {
+        margin: 0;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .detail-item p {
+        margin: 5px 0 0;
+        color: #e0e0e0;
+    }
+
+    .price-tag {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .stock-status {
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+
+    .stock-status.in-stock {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .stock-status.out-of-stock {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .quantity-input {
+        width: 100px;
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 8px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        appearance: textfield;
+        -moz-appearance: textfield;
+    }
+
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .btn-add-to-cart {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: var(--accent-color);
+        border: none;
+    }
+
+    .btn-add-to-cart:hover {
+        background: var(--accent-color-hover);
+    }
+
+    .form-label {
+        color: #e0e0e0 !important;
+    }
+
+    .alert-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-color: rgba(255, 193, 7, 0.3);
+        color: #ffc107;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="game-header">
+    <div class="container">
+        <h1 class="game-title">{{ game.GameTitle }}</h1>
+        <p class="lead">{{ game.Genre }} • {{ game.Platform }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="game-info">
+                <h2 class="mb-4" style="color: #fff;">About the Game</h2>
+                <p class="game-description">{{ game.Description }}</p>
+                
+                <div class="game-details">
+                    <div class="detail-item">
+                        <i class="fas fa-gamepad"></i>
+                        <h5>Genre</h5>
+                        <p>{{ game.Genre }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-desktop"></i>
+                        <h5>Platform</h5>
+                        <p>{{ game.Platform }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-box"></i>
+                        <h5>Stock</h5>
+                        <p>{{ game.StockQuantity }} units</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="game-info">
+                <div class="price-tag">
+                    ${{ "%.2f"|format(game.Price) }}
+                </div>
+                
+                <div class="stock-status {{ 'in-stock' if game.StockQuantity > 0 else 'out-of-stock' }}">
+                    <i class="fas {{ 'fa-check-circle' if game.StockQuantity > 0 else 'fa-times-circle' }} me-2"></i>
+                    {{ 'In Stock' if game.StockQuantity > 0 else 'Out of Stock' }}
+                </div>
+
+                {% if game.StockQuantity > 0 %}
+                    <form action="{{ url_for('add_to_cart', game_id=game.GameId) }}" method="POST" class="mb-4">
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" 
+                                   class="form-control quantity-input" 
+                                   id="quantity" 
+                                   name="quantity" 
+                                   min="1" 
+                                   max="{{ game.StockQuantity }}" 
+                                   value="1"
+                                   required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-add-to-cart">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        This game is currently out of stock. Please check back later.
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-light w-100">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Games
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add quantity input validation
+    const quantityInput = document.querySelector('.quantity-input');
+    if (quantityInput) {
+        quantityInput.addEventListener('change', function() {
+            const max = parseInt(this.getAttribute('max'));
+            const value = parseInt(this.value);
+            
+            if (value > max) {
+                this.value = max;
+            } else if (value < 1) {
+                this.value = 1;
+            }
+        });
+
+        // Prevent form submission if quantity is invalid
+        const form = quantityInput.closest('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const value = parseInt(quantityInput.value);
+                const max = parseInt(quantityInput.getAttribute('max'));
+                
+                if (value < 1 || value > max) {
+                    e.preventDefault();
+                    alert('Please enter a valid quantity between 1 and ' + max);
+                }
+            });
+        }
+    }
+</script>
+{% endblock %} 

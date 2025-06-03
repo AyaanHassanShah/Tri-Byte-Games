@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Order Details - Tri Byte Games{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #101722;
+        color: #fff;
+    }
+    .order-header {
+        background: linear-gradient(rgba(16, 23, 34, 0.7), rgba(16, 23, 34, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        padding: 48px 32px 24px 32px;
+        text-align: center;
+        position: relative;
+    }
+    .order-card {
+        background: #181f2a;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        color: #fff;
+        transition: all 0.3s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+    .order-card .order-header {
+        background: #232b3b;
+        color: #fff;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 12px 12px 0 0;
+        margin-bottom: 0;
+        box-shadow: none;
+    }
+    .order-id, .order-date, .order-header h1, .order-header h3 {
+        color: #fff !important;
+    }
+    .order-body {
+        padding: 25px;
+    }
+    .order-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .info-item {
+        background: #232b3b;
+        padding: 15px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        color: #fff;
+    }
+    .info-item:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    .info-label {
+        font-size: 0.9rem;
+        color: #b0b8c1;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ff4d4f;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background: #232b3b;
+        color: #fff;
+        border: 1.5px solid #444a57;
+        transition: all 0.3s ease;
+    }
+    .status-badge.pending {
+        background-color: #ffc10722;
+        color: #ffc107;
+        border-color: #ffc107;
+    }
+    .status-badge.completed {
+        background-color: #28a74522;
+        color: #28a745;
+        border-color: #28a745;
+    }
+    .status-badge.cancelled {
+        background-color: #dc354522;
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    .payment-badge {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background: #232b3b;
+        color: #fff;
+        border: 1.5px solid #444a57;
+    }
+    .payment-badge.paid {
+        background-color: #28a74522;
+        color: #28a745;
+        border-color: #28a745;
+    }
+    .payment-badge.pending {
+        background-color: #ffc10722;
+        color: #ffc107;
+        border-color: #ffc107;
+    }
+    .game-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-radius: 10px;
+        background: #232b3b;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        color: #fff;
+    }
+    .game-item:hover {
+        background: #232b3b;
+        transform: translateX(10px);
+    }
+    .game-item:last-child {
+        margin-bottom: 0;
+    }
+    .game-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 5px;
+    }
+    .game-details {
+        color: #b0b8c1;
+        font-size: 0.9rem;
+    }
+    .price-tag {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ff4d4f;
+    }
+    .order-total {
+        background: #232b3b;
+        color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .order-total .total-label {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .order-total .total-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ff4d4f;
+    }
+    .btn-outline-secondary, .btn-primary {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        background: #ff4d4f;
+        color: #fff;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-outline-secondary:hover, .btn-primary:hover {
+        background: #d9363e;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-header">
+    <div class="container">
+        <h1 class="display-4 mb-4">Order Details</h1>
+        <p class="lead">Order #{{ order.OrderId }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                <span class="order-id">Order #{{ order.OrderId }}</span>
+                <div class="order-date">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    {{ order.OrderDate or 'N/A' }}
+                    {% if order.OrderTime %}
+                        <span class="ms-2">
+                            <i class="far fa-clock me-1"></i>
+                            {{ order.OrderTime.strftime('%I:%M %p') if order.OrderTime else 'N/A' }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="status-badge {{ (order.Status or 'pending').lower() }}">
+                <i class="fas fa-circle me-1"></i>
+                {{ order.Status or 'Pending' }}
+            </div>
+        </div>
+        <div class="order-body">
+            <div class="order-info">
+                <div class="info-item">
+                    <div class="info-label">Payment Status</div>
+                    <div class="payment-badge {{ (order.PaymentStatus or 'pending').lower() }}">
+                        <i class="fas fa-credit-card me-1"></i>
+                        {{ order.PaymentStatus or 'Pending' }}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Payment Method</div>
+                    <div class="info-value">
+                        <i class="fas fa-money-bill-wave me-1"></i>
+                        {{ order.PaymentMethod or 'N/A' }}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Order Date</div>
+                    <div class="info-value">
+                        <i class="far fa-calendar-alt me-1"></i>
+                        {{ order.OrderDate or 'N/A' }}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Order Time</div>
+                    <div class="info-value">
+                        <i class="far fa-clock me-1"></i>
+                        {{ order.OrderTime.strftime('%I:%M %p') if order.OrderTime else 'N/A' }}
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mb-4">Order Items</h4>
+            {% for item in order_items %}
+            <div class="game-item">
+                <div class="flex-grow-1">
+                    <h5 class="game-title">{{ item.GameTitle }}</h5>
+                    <div class="game-details">
+                        <span class="me-3"><i class="fas fa-tag me-1"></i>Price: ${{ "%.2f"|format(item.Price or 0) }}</span>
+                        <span><i class="fas fa-shopping-basket me-1"></i>Quantity: {{ item.Quantity or 0 }}</span>
+                    </div>
+                </div>
+                <div class="price-tag ms-3">
+                    ${{ "%.2f"|format(item.TotalAmount or 0) }}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="order-total">
+                <span class="total-label">Total Amount:</span>
+                <span class="total-amount">${{ "%.2f"|format(order.TotalAmount or 0) }}</span>
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ url_for('orders') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Orders
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add animation to game items
+    const gameItems = document.querySelectorAll('.game-item');
+    gameItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-20px)';
+        item.style.transition = 'all 0.3s ease';
+        
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, index * 100);
+    });
+</script>
+{% endblock %} 

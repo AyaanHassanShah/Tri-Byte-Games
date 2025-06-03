@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - Tri Byte Games{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #101722;
+        color: #fff;
+    }
+    .cart-header {
+        background: linear-gradient(rgba(16, 23, 34, 0.7), rgba(16, 23, 34, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        padding: 48px 32px 24px 32px;
+        text-align: center;
+        position: relative;
+    }
+    .cart-table, .cart-summary {
+        background: #181f2a;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        color: #fff;
+        padding: 24px 32px;
+        margin-bottom: 24px;
+    }
+    .cart-table {
+        margin-right: 24px;
+    }
+    .cart-table th, .cart-table td {
+        border: none;
+        color: #fff;
+        vertical-align: middle;
+        padding: 18px 16px;
+        font-size: 1.1rem;
+        background: transparent;
+    }
+    .cart-table thead th {
+        color: #fff;
+        background: #181f2a;
+        font-weight: 700;
+        font-size: 1.15rem;
+    }
+    .cart-item-title {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    .price-tag, .total-tag, .cart-total {
+        color: #ff4d4f;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+    .btn-primary, .btn-update {
+        background: #ff4d4f;
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.2s;
+        padding: 10px 22px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-primary:hover, .btn-update:hover {
+        background: #d9363e;
+    }
+    .btn-outline-secondary {
+        background: #232b3b;
+        color: #fff;
+        border: 1px solid #232b3b;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 10px 22px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-outline-secondary:hover {
+        background: #2c3446;
+        color: #fff;
+    }
+    .btn-remove {
+        border: 1.5px solid #ff4d4f;
+        color: #ff4d4f;
+        background: transparent;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 10px 22px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-remove:hover {
+        background: #ff4d4f;
+        color: #fff;
+    }
+    .quantity-input {
+        background: #232b3b;
+        color: #fff;
+        border: 1.5px solid #232b3b;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        padding: 10px 18px;
+        width: 90px;
+        margin-right: 10px;
+        margin-left: 10px;
+        text-align: center;
+    }
+    .cart-summary h3,
+    .cart-summary .h5,
+    .cart-summary span {
+        color: #fff !important;
+    }
+    .cart-actions .btn {
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .empty-cart {
+        background: #181f2a;
+        color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        padding: 60px 20px;
+    }
+    .cart-item {
+        transition: background 0.2s;
+        border-radius: 12px;
+    }
+    .cart-item:hover {
+        background: #232b3b;
+    }
+    /* Stock badge style */
+    .cart-badge, .stock-badge {
+        display: inline-block;
+        background: #1e824c;
+        color: #fff;
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-top: 8px;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .cart-table, .cart-summary {
+            margin-right: 0;
+            padding: 16px 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cart-header">
+    <div class="container">
+        <h1 class="display-4 mb-4">Your Shopping Cart</h1>
+        <p class="lead">Review your items and proceed to checkout</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-table">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Game</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr class="cart-item">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        
+                                        <div>
+                                            <div class="cart-item-title">{{ item.GameTitle }}</div>
+                                            <div class="cart-item-details">
+                                                <i class="fas fa-gamepad me-1"></i>Game
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="price-tag">${{ "%.2f"|format(item.Price) }}</div>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('update_cart', cart_id=item.CartId) }}" method="POST" class="d-flex align-items-center">
+                                        <input type="number" name="quantity" value="{{ item.Quantity }}" min="1" class="form-control quantity-input me-2">
+                                        <button type="submit" class="btn btn-update">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <div class="total-tag">${{ "%.2f"|format(item.TotalAmount) }}</div>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('remove_from_cart', cart_id=item.CartId) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm btn-remove" onclick="return confirm('Are you sure you want to remove {{ item.GameTitle }} from your cart?')">
+                                            <i class="fas fa-times-circle"></i> Remove
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h3 class="mb-4" style="color: #000000;"><i class="fas fa-shopping-cart me-2"></i>Order Summary</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="h5 mb-0" style="color: #000000;">Total Amount:</span>
+                        <span class="cart-total">${{ "%.2f"|format(cart_total) }}</span>
+                    </div>
+
+                    <div class="cart-actions">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                        <a href="{{ url_for('order_summary') }}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Your cart is empty</h3>
+            <p class="text-muted mb-4">Looks like you haven't added any games to your cart yet.</p>
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-gamepad me-2"></i>Browse Games
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add quantity input validation
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value < 1) {
+                this.value = 1;
+            }
+        });
+    });
+
+    // Add animation to cart items
+    const cartItems = document.querySelectorAll('.cart-item');
+    cartItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-20px)';
+        item.style.transition = 'all 0.3s ease';
+        
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, index * 100);
+    });
+
+    // Add hover effect to cart summary
+    const cartSummary = document.querySelector('.cart-summary');
+    if (cartSummary) {
+        cartSummary.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        cartSummary.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    }
+
+    // Add hover effect to buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('btn-outline-danger')) {
+                this.style.transform = 'translateY(-2px)';
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('btn-outline-danger')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+</script>
+{% endblock %} 

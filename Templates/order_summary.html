@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}Order Summary - Tri Byte Games{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-summary-header {
+        background: linear-gradient(rgba(16, 23, 34, 0.7), rgba(16, 23, 34, 0.7)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        padding: 48px 32px 24px 32px;
+        text-align: center;
+        position: relative;
+    }
+
+    .order-summary-card {
+        background: #181f2a;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        color: #fff;
+        padding: 24px 32px;
+        margin-bottom: 24px;
+    }
+
+    .order-summary-card h3,
+    .order-summary-card label,
+    .order-summary-card th,
+    .order-summary-card td,
+    .order-summary-card span,
+    .order-summary-card .order-total {
+        color: #fff !important;
+    }
+
+    .order-summary-card th, .order-summary-card td {
+        border: none;
+        background: transparent;
+        font-size: 1.1rem;
+    }
+
+    .order-summary-card thead th {
+        color: #fff;
+        background: #181f2a;
+        font-weight: 700;
+        font-size: 1.15rem;
+    }
+
+    .order-total {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff4d4f !important;
+        margin: 20px 0;
+    }
+
+    .btn-pay, .btn-primary {
+        background: #ff4d4f;
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.2s;
+        padding: 15px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-pay:hover, .btn-primary:hover {
+        background: #d9363e;
+    }
+
+    .payment-method-card {
+        border: 2px solid #232b3b;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #232b3b;
+        color: #fff;
+    }
+
+    .payment-method-card.selected {
+        border-color: #ff4d4f;
+        background-color: #232b3b;
+    }
+
+    .payment-method-card input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .payment-method-card label {
+        color: #fff !important;
+        font-weight: 600;
+        margin-bottom: 0;
+        font-size: 1.1rem;
+        opacity: 1 !important;
+    }
+
+    .payment-form {
+        margin-top: 20px;
+    }
+
+    .payment-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .payment-form label {
+        font-weight: 700;
+        color: #fff !important;
+        margin-bottom: 12px;
+        font-size: 1.3rem;
+        display: block;
+    }
+
+    .payment-form .form-control {
+        padding: 12px;
+        border: 2px solid #232b3b;
+        border-radius: 8px;
+        background: #232b3b;
+        color: #fff;
+    }
+
+    .payment-form .form-control:focus, .payment-form .form-control:not(:placeholder-shown) {
+        border-color: #ff4d4f;
+        box-shadow: none;
+        background: #232b3b;
+        color: #fff;
+    }
+
+    .payment-form .form-control::placeholder {
+        color: #fff;
+        opacity: 1;
+    }
+
+    .card-number-group {
+        position: relative;
+    }
+
+    .card-number-group i {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+
+    .expiry-cvv-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .upi-id-group {
+        position: relative;
+    }
+
+    .upi-id-group i {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+
+    /* Specifically for PayPal email input, avoid white border on focus */
+    #paypalForm .form-control:focus {
+        border-color: #ff4d4f;
+        box-shadow: none;
+        background: #232b3b;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-summary-header">
+    <div class="container">
+        <h1 class="display-4 mb-4" style="font-weight: 700;">Order Summary</h1>
+        <p class="lead">Review your order and complete the payment</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="order-summary-card">
+                <h3 class="mb-4" style="color: #000000; font-weight: 700;">Order Items</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Game</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>{{ item.GameTitle }}</td>
+                                <td>${{ "%.2f"|format(item.Price) }}</td>
+                                <td>{{ item.Quantity }}</td>
+                                <td>${{ "%.2f"|format(item.TotalAmount) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="order-summary-card">
+                <h3 class="mb-4" style="color: #fff; font-weight: 700;">Payment Details</h3>
+                <form action="{{ url_for('checkout') }}" method="POST" id="paymentForm">
+                    <div class="payment-methods mb-4">
+                        <div class="payment-method-card" onclick="selectPaymentMethod('credit_card')">
+                            <input type="radio" name="payment_method" value="credit_card" id="credit_card" required>
+                            <label for="credit_card">
+                                <i class="fas fa-credit-card me-2"></i>Credit Card
+                            </label>
+                        </div>
+                        <div class="payment-method-card" onclick="selectPaymentMethod('debit_card')">
+                            <input type="radio" name="payment_method" value="debit_card" id="debit_card">
+                            <label for="debit_card">
+                                <i class="fas fa-credit-card me-2"></i>Debit Card
+                            </label>
+                        </div>
+                        <div class="payment-method-card" onclick="selectPaymentMethod('paypal')">
+                            <input type="radio" name="payment_method" value="paypal" id="paypal">
+                            <label for="paypal">
+                                <i class="fab fa-paypal me-2"></i>PayPal
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Credit/Debit Card Form -->
+                    <div id="cardForm" class="payment-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="card_number">Card Number</label>
+                            <div class="card-number-group">
+                                <input type="text" class="form-control" id="card_number" name="card_number" 
+                                       placeholder="1234 5678 9012 3456" maxlength="19" pattern="\d{4} \d{4} \d{4} \d{4}">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="card_holder">Card Holder Name</label>
+                            <input type="text" class="form-control" id="card_holder" name="card_holder" 
+                                   placeholder="John Doe">
+                        </div>
+                        <div class="expiry-cvv-group">
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiry" name="expiry" 
+                                       placeholder="MM/YY" maxlength="5" pattern="\d{2}/\d{2}">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="password" class="form-control" id="cvv" name="cvv" 
+                                       placeholder="123" maxlength="3" pattern="\d{3}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Form -->
+                    <div id="paypalForm" class="payment-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="paypal_email">PayPal Email</label>
+                            <input type="email" class="form-control" id="paypal_email" name="paypal_email" placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="order-total text-center">
+                        Total: ${{ "%.2f"|format(cart_total) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-pay">
+                        <i class="fas fa-lock me-2"></i>Pay Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectPaymentMethod(method) {
+    document.getElementById('cardForm').style.display = 'none';
+    // Hide UPI/PayPal forms
+    var paypalForm = document.getElementById('paypalForm');
+    if (paypalForm) paypalForm.style.display = 'none';
+
+    if (method === 'credit_card' || method === 'debit_card') {
+        document.getElementById('cardForm').style.display = 'block';
+    } else if (method === 'paypal') {
+        if (paypalForm) paypalForm.style.display = 'block';
+    }
+    document.getElementById(method).checked = true;
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    document.querySelector(`.payment-method-card[onclick=\"selectPaymentMethod('${method}')\"]`).classList.add('selected');
+}
+
+// Card number formatting
+document.getElementById('card_number').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    let formattedValue = '';
+    for(let i = 0; i < value.length; i++) {
+        if(i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+        }
+        formattedValue += value[i];
+    }
+    e.target.value = formattedValue;
+});
+
+// Expiry date formatting
+document.getElementById('expiry').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+        value = value.substring(0,2) + '/' + value.substring(2);
+    }
+    e.target.value = value;
+});
+
+// Form validation
+document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    if (selectedMethod === 'credit_card' || selectedMethod === 'debit_card') {
+        const cardNumber = document.getElementById('card_number').value;
+        const cardHolder = document.getElementById('card_holder').value;
+        const expiry = document.getElementById('expiry').value;
+        const cvv = document.getElementById('cvv').value;
+        
+        if (!cardNumber || !cardHolder || !expiry || !cvv) {
+            e.preventDefault();
+            alert('Please fill in all card details');
+        }
+    } else if (selectedMethod === 'paypal') {
+        const paypalEmail = document.getElementById('paypal_email').value;
+        if (!paypalEmail) {
+            e.preventDefault();
+            alert('Please enter your PayPal email');
+        }
+    }
+});
+</script>
+{% endblock %} 
